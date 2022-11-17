@@ -16,9 +16,12 @@ class PostFactory extends Factory
      */
     public function definition()
     {
+        $categoryIDs = \App\Models\Category::pluck('id');
+
         return [
             'title' => $this->faker->text(20),
             'content' => $this->faker->paragraphs(5, true),
+            'category_id' => $categoryIDs->random(),
         ];
     }
 }
