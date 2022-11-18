@@ -15,6 +15,23 @@ class StorePostRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+          'category_id' => 'category',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'title.required' => 'O campo Titulo é obrigatório',
+            'content.required' => 'O campo Conteudo é obrigatório',
+            'category_id.required' => 'A categoria é obrigatória',
+            'category_id.exists' => 'A categoria selecionada não existe',
+        ];
+    }
+
     public function authorize(): bool
     {
         return true;

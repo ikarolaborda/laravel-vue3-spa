@@ -18,6 +18,7 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'category_id' => $this->category_id,
             'category' => $this->category->name,
             'content' => Str::of($this->content)->limit(50),
             'created_at' => $this->created_at->format('d/m/Y'),

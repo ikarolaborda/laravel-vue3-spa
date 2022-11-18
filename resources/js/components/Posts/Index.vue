@@ -75,6 +75,9 @@
                             </div>
                         </div>
                     </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left">
+                        Actions
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="">
@@ -84,6 +87,16 @@
                     <td class="border divide-opacity-50 divide-x-2 divide-y-2 px-6 py-4 whitespace-no-wrap leading-5 text-sm text-gray-900">{{ post.category }}</td>
                     <td class="border divide-opacity-50 divide-x-2 divide-y-2 px-6 py-4 whitespace-no-wrap leading-5 text-sm text-gray-900">{{ post.content }}</td>
                     <td class="border divide-opacity-50 divide-x-2 divide-y-2 px-6 py-4 whitespace-no-wrap leading-5 text-sm text-gray-900">{{ post.created_at }}</td>
+                    <td class="border divide-opacity-50 divide-x-2 divide-y-2 px-6 py-4 whitespace-no-wrap leading-5 text-sm text-gray-900">
+                        <div class="inline-flex">
+                            <router-link :to="{ name: 'posts.edit', params: { id: post.id } }" class="text-indigo-600 hover:text-indigo-900">
+                                <PencilIcon class="text-sm h-5" />
+                            </router-link>
+                            <router-link :to="{}" class="text-red-600 hover:text-red-900">
+                                <TrashIcon class="ml-5 text-sm h-5" />
+                            </router-link>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -99,9 +112,12 @@ import {ref, onMounted, watch} from "vue";
 import usePosts from "../../composables/posts";
 import useCategories from "../../composables/categories";
 import { TailwindPagination } from 'laravel-vue-pagination';
+import { PencilIcon, TrashIcon } from "@heroicons/vue/24/outline";
 export default {
     components: {
-        TailwindPagination
+        TailwindPagination,
+        PencilIcon,
+        TrashIcon
     },
     setup() {
         const selectedCategory = ref('');
@@ -124,7 +140,7 @@ export default {
             getPosts(1, current)
         });
 
-        return { posts, getPosts, categories, getCategories, selectedCategory, orderColumn, orderDirection, updateOrdering };
+        return { posts, getPosts, categories, getCategories, selectedCategory, orderColumn, orderDirection, updateOrdering};
     }
 };
 </script>
