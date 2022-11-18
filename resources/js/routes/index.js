@@ -37,7 +37,7 @@ const routes = [
                 path: '/posts',
                 name: 'posts.index',
                 component: PostsIndex,
-                meta: { title: 'Posts' }
+                meta: { title: 'Posts List' }
             },
             {
                 path: '/posts/create',
