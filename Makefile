@@ -30,3 +30,6 @@ mysql:
 
 php:
 	docker exec -it php bash
+
+mig:
+	docker exec -it php php artisan migrate:fresh --seed
