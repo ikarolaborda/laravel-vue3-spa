@@ -10,7 +10,7 @@ export default function usePosts() {
         axios.get('/api/posts?page=' + page +
             '&category=' + category +
             '&order_column=' + order_column +
-            '&order_direction' + order_direction).then(
+            '&order_direction=' + order_direction).then(
             response => {
                 posts.value = response.data;
             }
