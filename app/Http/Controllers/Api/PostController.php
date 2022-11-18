@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class PostController extends Controller
 {
@@ -48,25 +49,38 @@ class PostController extends Controller
 
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function store(StorePostRequest $request)
     {
+        $this->authorize('posts.create');
         $post = Post::create($request->validated());
         return new PostResource($post);
     }
 
     public function show(Post $post)
     {
+        $this->authorize('posts.update');
         return new PostResource($post);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(StorePostRequest $request, Post $post)
     {
+        $this->authorize('posts.update');
         $post->update($request->validated());
         return new PostResource($post);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Post $post)
     {
+        $this->authorize('posts.delete');
         $post->delete();
         return response()->noContent();
     }

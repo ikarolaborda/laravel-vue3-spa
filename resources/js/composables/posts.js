@@ -88,9 +88,11 @@ export default function usePosts() {
             text: "Você não poderá reverter isso!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, Deletar!'
+            confirmButtonText: 'Sim, apague-o!',
+            confirmButtonColor: '#ef4444',
+            timer: 20000,
+            timerProgressBar: true,
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.delete('/api/posts/' + id).then(
@@ -102,7 +104,12 @@ export default function usePosts() {
                             title: 'Post Apagado com Sucesso!',
                         });
                     }
-                )
+                ).catch(error => {
+                    swal({
+                        icon: 'error',
+                        title: 'Você não tem permissão para executar esta ação!',
+                    })
+                })
             }
         }).catch(error => {
             swal({
