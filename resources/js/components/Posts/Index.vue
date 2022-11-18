@@ -1,54 +1,52 @@
 <template xmlns="http://www.w3.org/1999/html">
     <div class="overflow-hidden overflow-x-auto p-6 bg-white border-gray-200">
         <div class="min-w-full align-middle">
-            <div class="mb-4">
-                <select v-model="selectedCategory" class="block mt-1 w-full sm:w-1/4 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <option selected value="">-- Filter by Category --</option>
-                    <option v-for="category in categories" :value="category.id">
-                        {{ category.name }}
-                    </option>
-                </select>
+            <div class="mb-4 grid lg:grid-cols-4 gap-4">
+                <input v-model="search_global" type="text" placeholder="Search..." class="inline-block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             </div>
             <table class="border border-solid w-full">
                 <thead>
                 <tr>
                     <th class="px-6 py-3 bg-gray-50 text-left">
-                        <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">ID</span>
-                        <!--                        <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">ID</span>-->
+                        <input v-model="search_id" type="text" class="inline-block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Filter by ID">
+                    </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left">
+                        <input v-model="search_title" type="text" class="inline-block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Filter by Title">
+                    </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left">
+                        <select v-model="search_category" class="inline-block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option value="" selected>-- all categories --</option>
+                            <option v-for="category in categories" :value="category.id">
+                                {{ category.name }}
+                            </option>
+                        </select>
+                    </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left">
+                        <input v-model="search_content" type="text" class="inline-block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Filter by Content">
+                    </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left"></th>
+                    <th class="px-6 py-3 bg-gray-50 text-left"></th>
+                </tr>
+                <tr>
+                    <th class="px-6 py-3 bg-gray-50 text-left">
                         <div class="flex flex-row items-center justify-between cursor-pointer" @click="updateOrdering('id')">
-                            <div :class="{ 'font-bold text-blue-600': orderColumn === 'id' }" class="leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                            <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'id' }">
                                 ID
                             </div>
                             <div class="select-none">
+                                    <span :class="{
+                                      'text-blue-600': orderDirection === 'asc' && orderColumn === 'id',
+                                      'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'id',
+                                    }">&uarr;</span>
                                 <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'id',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'id',
-                                }">&uarr;</span>
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'id',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'id',
-                                }">&darr;</span>
+                                      'text-blue-600': orderDirection === 'desc' && orderColumn === 'id',
+                                      'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'id',
+                                    }">&darr;</span>
                             </div>
                         </div>
                     </th>
                     <th class="px-6 py-3 bg-gray-50 text-left">
                         <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</span>
-                        <!--                        <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</span>-->
-                        <div class="flex flex-row items-center justify-between cursor-pointer" @click="updateOrdering('title')">
-                            <div :class="{ 'font-bold text-blue-600': orderColumn === 'title' }" class="leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                Title
-                            </div>
-                            <div class="select-none">
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'asc' && orderColumn === 'title',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'title',
-                                }">&uarr;</span>
-                                <span :class="{
-                                  'text-blue-600': orderDirection === 'desc' && orderColumn === 'title',
-                                  'hidden': orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'title',
-                                }">&darr;</span>
-                            </div>
-                        </div>
                     </th>
                     <th class="px-6 py-3 bg-gray-50 text-left">
                         <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Category</span>
@@ -92,9 +90,9 @@
                             <router-link :to="{ name: 'posts.edit', params: { id: post.id } }" class="text-indigo-600 hover:text-indigo-900">
                                 <PencilIcon class="text-sm h-5" />
                             </router-link>
-                            <router-link :to="{}" class="text-red-600 hover:text-red-900">
+                            <a href="#" @click.prevent="deletePost(post.id)" class="text-red-600 hover:text-red-900">
                                 <TrashIcon class="ml-5 text-sm h-5" />
-                            </router-link>
+                            </a>
                         </div>
                     </td>
                 </tr>
@@ -120,10 +118,14 @@ export default {
         TrashIcon
     },
     setup() {
-        const selectedCategory = ref('');
+        const search_category = ref('');
+        const search_id = ref('');
+        const search_title = ref('');
+        const search_content = ref('');
+        const search_global = ref('');
         const orderColumn = ref('created_at');
         const orderDirection = ref('desc');
-        const { posts, getPosts } = usePosts();
+        const { posts, getPosts, deletePost } = usePosts();
         const { categories, getCategories } = useCategories();
         onMounted(() => {
             getPosts(),
@@ -133,14 +135,79 @@ export default {
         const updateOrdering = (column) => {
             orderColumn.value = column;
             orderDirection.value = (orderDirection.value === 'asc') ? 'desc' : 'asc';
-            getPosts(1, selectedCategory.value, orderColumn.value, orderDirection.value);
+            getPosts(1, search_category.value,
+                search_id.value,
+                search_title.value,
+                search_content.value,
+                orderColumn.value,
+
+                orderDirection.value);
         }
 
-        watch(selectedCategory, (current, previous) => {
-            getPosts(1, current)
+        watch(search_category, (current, previous) => {
+            getPosts(
+                1,
+                current,
+                search_id.value,
+                search_title.value,
+                search_content.value,
+                search_global.value)
         });
 
-        return { posts, getPosts, categories, getCategories, selectedCategory, orderColumn, orderDirection, updateOrdering};
+        watch(search_id, (current, previous) => {
+            getPosts(
+                1,
+                search_category.value,
+                current,
+                search_title.value,
+                search_content.value,
+                search_global.value)
+        });
+
+        watch(search_title, (current, previous) => {
+            getPosts(
+                1,
+                search_category.value,
+                search_id.value,
+                current,
+                search_content.value,
+                search_global.value)
+        });
+
+        watch(search_content, (current, previous) => {
+            getPosts(
+                1,
+                search_category.value,
+                search_id.value,
+                search_title.value,
+                current,
+                search_global.value)
+        });
+
+        watch(search_global, (current, previous) => {
+            getPosts(
+                1,
+                search_category.value,
+                search_id.value,
+                search_title.value,
+                search_content.value,
+                current)
+        });
+
+        return { posts,
+            getPosts,
+            deletePost,
+            categories,
+            getCategories,
+            search_category,
+            search_id,
+            search_title,
+            search_content,
+            search_global,
+            orderColumn,
+            orderDirection,
+            updateOrdering
+        };
     }
 };
 </script>

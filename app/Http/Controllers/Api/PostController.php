@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -24,8 +23,24 @@ class PostController extends Controller
         }
 
         $posts = Post::with('category')
-            ->when(request('category'), function ($query) {
-                $query->where('category_id', request('category'));
+            ->when(request('search_category'), function ($query) {
+                $query->where('category_id', request('search_category'));
+            })
+            ->when(request('search_id'), function ($query) {
+                $query->where('id', request('search_id'));
+            })
+            ->when(request('search_title'), function ($query) {
+                $query->where('title', 'like', '%'.request('search_title'). '%');
+            })
+            ->when(request('search_content'), function ($query) {
+                $query->where('content', 'like', '%'.request('search_content'). '%');
+            })
+            ->when(request('search_global'), function ($query) {
+                $query->where(function ($query) {
+                    $query->where('id', request('search_global'))
+                        ->orWhere('title', 'like', '%'.request('search_global'). '%')
+                        ->orWhere('content', 'like', '%'.request('search_global'). '%');
+                });
             })
             ->orderBy($orderColumn, $orderDirection)
             ->paginate(10);
@@ -48,5 +63,11 @@ class PostController extends Controller
     {
         $post->update($request->validated());
         return new PostResource($post);
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return response()->noContent();
     }
 }
