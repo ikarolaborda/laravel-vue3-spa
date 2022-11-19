@@ -90,7 +90,7 @@
                             <router-link :to="{ name: 'posts.edit', params: { id: post.id } }" class="text-indigo-600 hover:text-indigo-900">
                                 <PencilIcon class="text-sm h-5" />
                             </router-link>
-                            <a href="#" @click.prevent="deletePost(post.id)" class="text-red-600 hover:text-red-900">
+                            <a v-if="can('posts.delete')" href="#" @click.prevent="deletePost(post.id)" class="text-red-600 hover:text-red-900">
                                 <TrashIcon class="ml-5 text-sm h-5" />
                             </a>
                         </div>
@@ -98,8 +98,8 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="mx-auto min-w-full align-middle mt-4">
-                <TailwindPagination :data="posts" @pagination-change-page="page => getPosts(page, selectedCategory)" />
+            <div class="flex justify-center mt-5">
+                <TailwindPagination class="mx-auto" :data="posts" @pagination-change-page="page => getPosts(page, selectedCategory)" />
             </div>
         </div>
     </div>
@@ -111,6 +111,7 @@ import usePosts from "../../composables/posts";
 import useCategories from "../../composables/categories";
 import { TailwindPagination } from 'laravel-vue-pagination';
 import { PencilIcon, TrashIcon } from "@heroicons/vue/24/outline";
+import { useAbility } from '@casl/vue';
 export default {
     components: {
         TailwindPagination,
@@ -127,6 +128,7 @@ export default {
         const orderDirection = ref('desc');
         const { posts, getPosts, deletePost } = usePosts();
         const { categories, getCategories } = useCategories();
+        const { can } = useAbility();
         onMounted(() => {
             getPosts(),
             getCategories()
@@ -206,7 +208,8 @@ export default {
             search_global,
             orderColumn,
             orderDirection,
-            updateOrdering
+            updateOrdering,
+            can
         };
     }
 };

@@ -32,8 +32,8 @@
 
         <!-- Page Heading -->
         <header class="bg-white shadow">
-            <div class="inline-flex justify-center items-center max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <h2 class="mb-4 text-2xl font-extrabold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl dark:text-white">
+            <div class="flex justify-center items-center max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h2 class="mx-auto mb-4 text-2xl font-extrabold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl dark:text-white">
                     {{ currentPageTitle}}
                 </h2>
             </div>
